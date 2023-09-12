@@ -12,16 +12,17 @@
     <%- include('nav.html') %>
 
         <div class="bd-example m-4 border-1">
-            <form action="/add" method="POST">
-            <div class="mb-3">
+            <form action="/login" method="POST">
+            <div class="form-group">
                 <label for="exampleInputEmail1" class="form-label">로그인</label>
                 <h4>아이디</h4>
-                <input name='identification' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <input name='id' class="form-control">
                 <div id="emailHelp" class="form-text"> 아이디를 입력해주세요. </div>
             </div>
+            <br></br>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">비밀번호</label>
-                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                <input type="password" name="pw" class="form-control">
                 <div id="emailHelp" class="form-text"> 비밀번호를 입력해주세요. </div>
             </div>
 

@@ -135,9 +135,82 @@ app.get('/login', function(요청, 응답){
   응답.render('login.ejs');
 });
 
-app.post('/login', function(요청, 응답){
-  db.collection('post').findOne({_id: 요청.params.id }, function(에러, 결과){
-    console.log("결과",결과);
-    응답.render('login.ejs');
+app.post('/login', passport.authenticate('local', {failureRedirect : '/fail'}), function(요청, 응답){
+  응답.redirect('/')
+});
+
+app.get('/fail', function(요청, 응답){
+  응답.render('fail.ejs');
+});
+
+passport.use(new LocalStrategy({
+  usernameField: 'id',
+  passwordField: 'pw',
+  session: true,
+  passReqToCallback: false,
+}, function (입력한아이디, 입력한비번, done) {
+  //console.log(입력한아이디, 입력한비번);
+  db.collection('member').findOne({ id: 입력한아이디 }, function (에러, 결과) {
+    console.log("ID,PW,결과", 입력한아이디, 입력한비번, 결과)
+    if (에러) return done(에러)
+
+    if (!결과) return done(null, false, { message: '존재하지않는 아이디요' })
+
+    if (입력한비번 == 결과.pw) {
+      return done(null, 결과)
+    } else {
+      return done(null, false, { message: '비번틀렸어요' })
+    }
+  })
+}));
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id)
+});
+
+passport.deserializeUser(function (아이디, done) {
+  db.collection('member').findOne({ id: 아이디 }, function (에러, 결과) {
+    done(null, 결과)
+  })
+}); 
+
+
+app.get('/mypage', 로그인했니, function (요청, 응답) {
+  console.log(요청.user.id);
+  console.log(요청.session);
+
+  응답.render('mypage.ejs', { 사용자: 요청.user });
+});
+
+function 로그인했니(요청, 응답, next) {
+  if (요청.user) {
+    console.log(요청.user)
+    next()
+  }
+  else {
+    응답.send('로그인이 되지 않았습니다. 로그인 해주세요.')
+  }
+}
+
+app.get('/search', (요청, 응답) => {
+  console.log('요청쿼리', 요청.query);
+
+  var 검색조건 = [
+    {
+      $search: {
+        index: 'search-index',
+        text: {
+          query: 요청.query.value,
+          path: '할일'  // 제목날짜 둘다 찾고 싶으면 ['할일', '날짜']
+        }
+      }
+    },
+    { $sort : { _id: 1 } }
+  ] 
+
+  // find함수 대신 aggregate 함수 사용. 이전 사용코드: find( { 할일 : {$regex : 요청.query.value } })
+  db.collection('post').aggregate(검색조건).toArray((에러, 결과) =>{
+    console.log('결과', 결과);
+    응답.render('search.ejs', { search: 결과 });
   });
 });
