@@ -17,7 +17,9 @@
             <form action="/register" method="POST">
             <div class="mb-3">
                 <label> ID를 입력하세요. </label>
-                <input name='id' class="form-control" id="id" aria-describedby="emailHelp">
+                <input name='id' class="form-control" aria-describedby="emailHelp"> 
+                <label class="check btn btn-primary">중복체크</label> 
+                <h4 id="check-confirm"></h4>
                 <div id="emailHelp" class="form-text"> *중복체크 기능은 아직 없음. </div>
             </div>
             <div class="mb-3">
@@ -36,9 +38,30 @@
             </form>
         </div>
 
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script>
+        $('.check').click(function(e){
+            var 검사할아이디 = $('input[name=id]').val();
+            console.log(검사할아이디);
 
+            $.ajax({
+                    method : 'post',
+                    url : '/idcheck',
+                    data : { id : 검사할아이디 }
+                }).done(function(결과, 상태){
+                    console.log('성공했어염', 상태.post);
+                    if (결과.post === 1) {
+                        $('#check-confirm').text('아이디를 사용할 수 없습니다!');
+                    } else {
+                        $('#check-confirm').text('아이디를 사용할 수 있습니다!');
+                    }
+                }).fail(function(xhr, textStatus, errorThrown){
+                    console.log('실패했어요');
+                    console.log(xhr, textStatus, errorThrown);
+                })
+        })
+        
     </script>
 </body>
 </html>

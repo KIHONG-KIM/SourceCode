@@ -23,8 +23,10 @@
           <br/>
           <% for (var i = 0; i < posts.length; i++){ %>
           <li class="list-group-item">
-            <h4> <%= posts[i]._id %> 할일 제목 : <%= posts[i].할일 %> </h4>
-            <p> 할일 마감날짜 : <%= posts[i].날짜 %> </p>
+            <a href="/detail/<%= posts[i]._id %>" >
+              <h4> <%= posts[i]._id %> 할일 제목 : <%= posts[i].할일 %> </h4>
+              <p> 할일 마감날짜 : <%= posts[i].날짜 %> </p>
+            </a>
             <a href="edit/<%= posts[i]._id %>"><button class="addHTML btn btn-primary edit" data-id="<%= posts[i]._id %>">편집</button></a>
             <button class="delete btn btn-danger delete" data-id="<%= posts[i]._id %>">삭제</button> 
           </li>

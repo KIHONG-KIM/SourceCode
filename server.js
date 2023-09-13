@@ -6,19 +6,17 @@ const MongoClient = require("mongodb").MongoClient;
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'))
 app.use('/public', express.static('public'))
-
 app.set('view engine', 'ejs');
-
-const uri = "mongodb+srv://admin:qwer1234@cluster-applecode.e2qolmi.mongodb.net/?retryWrites=true&w=majority";
+require('dotenv').config()
 
 var db;
 
-MongoClient.connect(uri, { useUnifiedTopology: true }, function (에러, client) {
+MongoClient.connect(process.env.DB_URL, { useUnifiedTopology: true }, function (에러, client) {
   if (에러) return console.log(에러)
 
   db = client.db('todoApp');
   
-  app.listen(8080, function () {
+  app.listen(process.env.PORT, function () {
 		console.log('listening on 8080')
 	});
 
@@ -112,6 +110,7 @@ app.put('/edit', function(요청, 응답){
 });
 
 app.delete('/delete', function(요청, 응답){ 
+
   //
   console.log(요청.body);
   요청.body._id = parseInt(요청.body._id);
@@ -222,11 +221,42 @@ app.get('/register', (요청, 응답) => {
 
 app.post('/register', (요청, 응답) => {
   
-  var 회원가입정보 = { id: 요청.body.id, pw: 요청.body.pw, 이름: 요청.body.name }
-  console.log('회원가입정보', 회원가입정보);
-  db.collection('post').insertOne(회원가입정보, (에러, 결과) => {
-    console.log(결과);
+  var info = { id: 요청.body.id, pw: 요청.body.pw, 이름: 요청.body.name }
+  console.log('회원가입정보', info.id, info.pw, info.이름);
+
+  if (info.id == null || info.id == "") { 
+    console.log('아이디를 입력해주세요');
+    return;
+  }
+  if (info.pw == null || info.pw == "" ) { 
+    console.log('비밀번호를 입력해주세요');
+    return; 
+  }
+  if (info.이름 == null || info.이름 == "") { 
+    console.log('이름을 넣어주세요');
+    return;
+  }
+  
+  db.collection('member').insertOne(info, (에러, 결과) => {
+    if(에러) console.log(에러);
+    // console.log(결과);
   });
 
   응답.render('index.ejs');
+});
+
+app.post('/idcheck', (요청, 응답) => {
+
+  var 아이디 = 요청.body.id;
+  console.log(요청.body.id)
+
+    db.collection('member').findOne({ id: 아이디 }, (에러, 결과) => {
+      if(에러) console.log('에러', 에러)
+
+        console.log('결과', 결과)
+        // 'DB에 없는 아이디 입니다. 사용할 수 있는 아이디임'
+        응답.render('register.ejs', { post : 1 });
+      
+    });
+
 });
