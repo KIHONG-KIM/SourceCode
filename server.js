@@ -5,6 +5,7 @@ app.use(bodyParser.urlencoded({extended : true}));
 const MongoClient = require("mongodb").MongoClient;
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'))
+app.use('/public', express.static('public'))
 
 app.set('view engine', 'ejs');
 
@@ -213,4 +214,19 @@ app.get('/search', (요청, 응답) => {
     console.log('결과', 결과);
     응답.render('search.ejs', { search: 결과 });
   });
+});
+
+app.get('/register', (요청, 응답) => {
+  응답.render('register.ejs');
+});
+
+app.post('/register', (요청, 응답) => {
+  
+  var 회원가입정보 = { id: 요청.body.id, pw: 요청.body.pw, 이름: 요청.body.name }
+  console.log('회원가입정보', 회원가입정보);
+  db.collection('post').insertOne(회원가입정보, (에러, 결과) => {
+    console.log(결과);
+  });
+
+  응답.render('index.ejs');
 });
