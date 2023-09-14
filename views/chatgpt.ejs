@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT Chat</title>
+</head>
+<body>
+    <h1>GPT Chat</h1>
+    <div>
+        <label for="userInput">질문:</label>
+        <input type="text" id="userInput">
+        <button onclick="askQuestion()">질문 보내기</button>
+    </div>
+    <div id="chatOutput">
+        <!-- 이곳에 GPT의 응답이 표시됩니다. -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        async function askQuestion() {
+            const userInput = document.getElementById('userInput').value;
+
+            console.log(userInput)
+
+            // OpenAI API 호출
+            const response = await fetch('/chatgpt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: ({ question: userInput }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                displayResponse(data.answer);
+            } else {
+                displayResponse('에러 발생');
+            }
+        }
+
+        function displayResponse(answer) {
+            const chatOutput = document.getElementById('chatOutput');
+            const responseElement = document.createElement('p');
+            responseElement.textContent = `응답: ${answer}`;
+            chatOutput.appendChild(responseElement);
+        }
+    </script>
+</body>
+</html>

@@ -24,11 +24,10 @@
           <% for (var i = 0; i < posts.length; i++){ %>
           <li class="list-group-item">
             <a href="/detail/<%= posts[i]._id %>" >
-              <h4> <%= posts[i]._id %> 할일 제목 : <%= posts[i].할일 %> </h4>
-              <p> 할일 마감날짜 : <%= posts[i].날짜 %> </p>
+              <h4> <%= posts[i]._id %> 할일 제목 : <%= posts[i].할일 %> </h4><p> 날짜 : <%= posts[i].날짜 %> </p>
             </a>
             <a href="edit/<%= posts[i]._id %>"><button class="addHTML btn btn-primary edit" data-id="<%= posts[i]._id %>">편집</button></a>
-            <button class="delete btn btn-danger delete" data-id="<%= posts[i]._id %>">삭제</button> 
+            <button class="delete btn btn-danger delete" data-id="<%= posts[i]._id %>" data-writer="<%= posts[i].글쓴이 %>">삭제</button> 
           </li>
           <% } %>
         </ul>
@@ -56,13 +55,14 @@
 
         $('.delete').click(function(e){
                 var 글번호 = e.target.dataset.id;
+                var 글쓴이 = e.target.dataset.writer;
                 var 지금누른거 = $(this);
                 console.log(글번호);
 
           $.ajax({
                 method : 'DELETE',
                 url : '/delete',
-                data : {_id: 글번호 }
+                data : {_id: 글번호, 글쓴이: 글쓴이 }
               }).done(function(결과){
                 console.log('성공했어염');
                 지금누른거.closest('li').fadeOut();

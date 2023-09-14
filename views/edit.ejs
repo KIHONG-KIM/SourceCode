@@ -9,7 +9,6 @@
   </head>
 
   <body>
-    <!-- 9/11 첫 커밋 -->
     <%- include('nav.html') %>
     
         <div class="bd-example m-4 border-1">
@@ -25,7 +24,10 @@
                 <label for="exampleInputPassword1" class="form-label">날짜</label>
                 <input name="date" value="<%= data.날짜 %>" class="form-control" id="exampleInputPassword1">
             </div>
-
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">글쓴이: <%= data.글쓴이 %> </label>
+                <input name="writer" value="<%= data.글쓴이 %>" class="form-control" type="hidden">
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
