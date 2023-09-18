@@ -73,4 +73,31 @@ router.delete('/delete', function(요청, 응답){
   }
 });
 
+// 파일 업로드
+
+let multer = require('multer');
+var today = new Date();
+
+var storage = multer.diskStorage({
+
+  destination : function(req, file, cb){
+    cb(null, './public/image')
+  },
+  filename : function(req, file, cb){
+    
+    cb(null, file.originalname)
+  }
+
+});
+
+var upload = multer({storage : storage});
+
+router.get('/upload', function(요청, 응답){
+  응답.render('upload.ejs')
+});
+
+router.post('/upload', upload.single("image"), function(요청, 응답){
+  응답.send('업로드 완료')
+});
+
 module.exports = router;
