@@ -1,21 +1,31 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link href="/public/main.css" rel="stylesheet">
-  </head>
-  <body>
-    <%- include('nav.html') %>
-      
-    <h1>상세 페이지</h1>
-    <h3>글번호: <%= data._id %></h3> 
-    <h3>제목: <%= data.할일 %></h3>
-    <h4>날짜: <%= data.날짜 %></h4>
-    <h4>글쓴이: <%=data.글쓴이 %></h4>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link href="/public/main.css" rel="stylesheet">
+</head>
+
+<body>
+  <%- include('nav.html') %>
+
+    <h1>상세 페이지</h1>
+    <h3>글번호: <%= data._id %>
+    </h3>
+    <h3>제목: <%= data.할일 %>
+    </h3>
+    <h4>날짜: <%= data.날짜 %>
+    </h4>
+    <h4>글쓴이: <%=data.글쓴이 %>
+    </h4>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"></script>
+</body>
+
 </html>

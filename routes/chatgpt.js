@@ -13,7 +13,7 @@ router.get('/chatgpt', (요청, 응답) => {
   응답.render('chatgpt.ejs');
 });
 
-router.post('/chatgpt', (요청, 응답) => {
+router.post('/chatgpt', async (요청, 응답, next) => {
 
   const question = 요청.body.question
   console.log(question)

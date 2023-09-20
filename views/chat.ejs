@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="/public/chat.css" rel="stylesheet">
+    <title>GPT Chat</title>
+</head>
+
+<body>
+
+    <%- include('nav.html') %>
+
+        <div class="container p-4 detail">
+
+            <div class="row">
+                <div class="col-3">
+                    <ul class="list-group chat-list">
+                        <li class="list-group-item" data-id="">
+                            <h6>채팅방1</h6>
+                            <h6 class="text-small">채팅방설명</h6>
+                        </li>
+                        <li class="list-group-item">
+                            <h6>채팅방2</h6>
+                            <h6 class="text-small">채팅방설명</h6>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-9 p-0">
+                    <div class="chat-room">
+                        <ul class="list-group chat-content">
+                            <li><span class="chat-box">채팅방1 내용</span></li>
+                            <li><span class="chat-box">채팅방1 내용</span></li>
+                            <li><span class="chat-box mine">채팅방1 내용</span></li>
+                        </ul>
+                        <div class="input-group">
+                            <input class="form-control" id="chat-input">
+                            <button class="btn btn-secondary" id="send">전송</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+        </script>
+</body>
+
+</html>

@@ -1,8 +1,8 @@
 var router = require('express').Router();
 
 
+/** 쓰기 Page **/
 
-// 추가하기 페이지
 router.get('/write', function(요청, 응답){
   응답.render('write.ejs')
 });
@@ -98,6 +98,10 @@ router.get('/upload', function(요청, 응답){
 
 router.post('/upload', upload.single("image"), function(요청, 응답){
   응답.send('업로드 완료')
+});
+
+router.get('/chat', function(요청, 응답){
+  응답.render('chat.ejs')
 });
 
 module.exports = router;
