@@ -100,8 +100,4 @@ router.post('/upload', upload.single("image"), function(요청, 응답){
   응답.send('업로드 완료')
 });
 
-router.get('/chat', function(요청, 응답){
-  응답.render('chat.ejs')
-});
-
 module.exports = router;

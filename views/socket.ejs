@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="/public/chat.css" rel="stylesheet">
-    <title>GPT Chat</title>
+    <title>Socket.IO Chat</title>
 </head>
 
 <body>
@@ -23,6 +23,7 @@
                         <li class="list-group-item" data-id="<%= data[i]._id%>">
                             <h6> <%= data[i].name %> </h6>
                             <h6 class="text-small">참여자: <%= data[i].member %> </h6>
+                            <button id="room1">방1 입장, 제발</button>
                         </li>
                         <% } %>
                     </ul>
@@ -36,8 +37,9 @@
                             <li><span class="chat-box mine">채팅방1 내용</span></li>
                         </ul>
                         <div class="input-group">
-                            <input class="form-control" id="chat-input">
+                            <input class="form-control" id="input1">
                             <button class="btn btn-secondary" id="send">전송</button>
+                            <button id="room1-send">#room1-send, 어쩌구저쩌구</button>
                         </div>
                     </div>
                 </div>
@@ -49,43 +51,26 @@
             integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
             crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" crossorigin="anonymous"></script>
         <script>
 
-            var 지금누른채팅방id;
-            var eventSource;
-
-            $('.list-group-item').click(function () {
-                $(this).css('background-color', '#eee');
-                지금누른채팅방id = $(this).attr('data-id');
-                $('.chat-content').html('')
-
-                // eventSource = new EventSource('/chat/'+지금누른채팅방id);
-                // eventSource.addEventListener('test', function(e) {
-
-                //     console.log(JSON.parse(e.data));
-                //     var 가져온거 = JSON.parse(e.data);
-                //     가져온거.forEach((a) => {
-                //         $('.chat-content').append(`<li><span class="chat-box">${a.content}</span></li>`)
-                //     });
-                // })
+            var socket = io();
+            $('#send').click(function(){
+                socket.emit('user-send', $('#input1').val());
             });
 
-            $('#send').click( function(){
+            socket.on('broadcast', function(data){
+                console.log(data)
+                $('.chat-content').append('<div>' + data + '<div>')
+            });
 
-                var 채팅메시지 = $('#chat-input').val();
-                
-                var 보낼거 = {
-                    parent: 지금누른채팅방id,
-                    content: 채팅메시지
-                }
-
-                console.log(채팅메시지, 보낼거);
-
-                $.post('/chatmsg',보낼거).then( () =>{
-                    console.log('전송성공');
-                })
-                
-            })
+            $('#room1').click(function () {
+                socket.emit('joinroom', '제발');
+            });
+            
+            $('#room1-send').click(function () {
+                socket.emit('room1-send', '어쩌구저쩌구');
+            });
 
         </script>
 </body>

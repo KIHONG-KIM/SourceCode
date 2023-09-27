@@ -35,8 +35,9 @@
               </a>
               <a href="edit/<%= posts[i]._id %>"><button class="addHTML btn btn-primary edit"
                   data-id="<%= posts[i]._id %>">편집</button></a>
-              <button class="delete btn btn-danger delete" data-id="<%= posts[i]._id %>"
+              <button class="delete btn btn-danger delete" data-id="<%= posts[i]._id %>" 
                 data-writer="<%= posts[i].글쓴이 %>">삭제</button>
+              <button class="btn btn-secondary chat" data-id="<%= posts[i].글쓴이 %>">채팅</button>
             </li>
             <% } %>
         </ul>
@@ -87,6 +88,22 @@
         var 입력한값 = $('#search-input').val();
         console.log(입력한값);
         window.location.replace('/search?value=' + 입력한값);
+      });
+
+      // 모지
+      $('.chat').click(function (e) {
+        var 클릭한거id = e.target.dataset.id;
+        console.log(클릭한거id) 
+
+        $.ajax({
+          method: 'POST',
+          url: '/chatroom',
+          data: { id: 클릭한거id }
+        }).done(function (결과) {
+          console.log('성공했어염');
+        }).fail(function (xhr, textStatus, errorThrown) {
+          console.log(xhr, textStatus, errorThrown);
+        });
       });
 
     </script>

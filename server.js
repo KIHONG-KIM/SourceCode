@@ -8,6 +8,9 @@ app.use(methodOverride("_method"));
 app.use("/public", express.static("public"));
 app.set("view engine", "ejs");
 require("dotenv").config();
+const http = require('http').createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(http);
 
 var db;
 
@@ -17,7 +20,7 @@ MongoClient.connect(
   function (에러, client) {
     if (에러) return console.log(에러);
     db = client.db("todoApp");
-    app.listen(process.env.PORT, function () {
+    http.listen(process.env.PORT, function () {
       console.log("listening on 8080");
     });
   }
@@ -118,21 +121,22 @@ app.get("/fail", function (요청, 응답) {
   응답.render("fail.ejs");
 });
 
+function 로그인했니(요청, 응답, next) {
+  if (요청.user) {
+    console.log('로그인했니?', 요청.user);
+    next();
+  } else {
+    응답.send("로그인이 되지 않았습니다. 로그인 해주세요.");
+    console.log('로그인했니? else');  
+  }
+}
+
 app.get("/mypage", 로그인했니, function (요청, 응답) {
   console.log(요청.user.id);
   console.log(요청.session);
 
   응답.render("mypage.ejs", { 사용자: 요청.user });
 });
-
-function 로그인했니(요청, 응답, next) {
-  if (요청.user) {
-    console.log(요청.user);
-    next();
-  } else {
-    응답.send("로그인이 되지 않았습니다. 로그인 해주세요.");
-  }
-}
 
 app.get("/search", (요청, 응답) => {
   console.log("요청쿼리", 요청.query);
@@ -199,4 +203,90 @@ app.post("/idcheck", (요청, 응답) => {
     // 'DB에 없는 아이디 입니다. 사용할 수 있는 아이디임'
     응답.render("register.ejs", { post: 1 });
   });
+});
+
+app.get("/chat", 로그인했니, function (요청, 응답) {
+
+  db.collection('chatroom').find( {member: 요청.user.이름}).toArray().then((결과) => {
+    console.log(결과);
+    응답.render('chat.ejs', { data: 결과 })
+  })
+});
+
+// 채팅 메시지 추가하기
+app.post("/chatmsg", (요청, 응답) => {
+  
+  console.log("요청.body", 요청.body)
+  var 추가하기 = {
+    parent: 요청.body.parent,
+    content: 요청.body.content
+  }
+  
+  db.collection('chat').insertOne(추가하기), (에러, 결과) => {
+    console.log('추가성공', 결과)
+  }
+
+});
+
+app.get("/chat/:parentid", 로그인했니, function (요청, 응답) {
+
+  // 응답.writeHead(200, {
+  //   "Connection": "keep-alive",
+  //   "Content-Type": "text/event-stream",
+  //   "Cache-Control": "no-cache",
+  // });
+
+  //   db.collection('chat').find( { parent: 요청.params.parentid }).toArray()
+  //   .then( (결과) => {
+  //     console.log(결과);
+  //     console.log('파라미터', 요청.params.parentid , "params");
+
+  //     응답.write('event: test \n');
+  //     응답.write('data:' + JSON.stringify(결과) + '\n\n');
+  //   });
+
+  });
+
+app.post("/chatroom", 로그인했니, (요청, 응답) => {
+  console.log("아이디확인하기", 요청.body.id, 요청.user.이름);
+
+  var 추가할거 = {
+    member: [요청.user.이름, 요청.body.id],
+    name: "최고의채팅방",
+    date: new Date(),
+  };
+  
+  console.log("추가할거", 추가할거);
+  db.collection("chatroom").insertOne(추가할거).then(function(결과){
+    console.log(결과);
+    응답.send('저장완료')
+  });
+});
+
+// 채팅
+
+app.get('/socket', 로그인했니, function(요청, 응답){
+
+  db.collection('chatroom').find( {member: 요청.user.이름}).toArray().then((결과) => {
+    console.log(결과);
+    응답.render('socket.ejs', { data: 결과 })
+  })
+});
+
+io.on('connection', function(socket){
+
+  console.log('유저 접속됨');
+  socket.on('user-send', function(data){
+    io.emit('broadcast', data)
+    console.log(data);
+  })
+
+  socket.on('joinroom', function(data){
+    socket.join("room1");
+  });
+
+  socket.on('room1-send', function(data){
+    io.to("room1").emit('broadcast', data);
+  });
+  
 });
